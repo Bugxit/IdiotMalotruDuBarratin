@@ -38,7 +38,21 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
 
         draw_x += 125
 
+    draw_x, draw_y = number_of_season * 125 + 100, 125
+    color_f = scale_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
+    for s_num in range(number_of_season):
+        dessin.rect_fill(draw_x, 75, 50, 50,"#000000")
+        dessin.ecrire(draw_x + 10, 65, s_num+1, col="white")
+        draw_y = 125
+        for e_num, e_rating in enumerate(rating_tab[s_num]):
+            dessin.rect_fill(number_of_season * 125 + 50, draw_y, 50, 50,"#000000")
+            dessin.ecrire(number_of_season * 125 + 52, draw_y - 10, e_num+1, col="white")
 
+            graph_color = hex(int(color_f(e_rating)))
+            dessin.rect_fill(draw_x, draw_y, 50, 50, f"#00{str(graph_color[2:])}00")
+            dessin.ecrire(draw_x + 12, draw_y - 15, e_rating,font=('Arial', 20, 'bold'))
+            draw_y += 50
+        draw_x += 50
 
 
     dessin.save_image()
