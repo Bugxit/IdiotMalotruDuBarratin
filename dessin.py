@@ -49,13 +49,15 @@ def cercle(x, y, r):
     bouge(x, y-r)
     circle(r)
 
-def ecrire(x, y, texte, align='left', font=('Arial', 32, 'normal')):
+def ecrire(x, y, texte, col="black", align='left', font=('Arial', 32, 'normal')):
     """
         Écrit les texte aux coordonnées x et y.
         (x,y) devra être le point en bas à gauche du texte.
     """
     bouge(x, y)
+    color(col)
     write(texte, align=align, font=font)
+    color("black")
 
 def save_image(output="output.png"):
     from PIL import Image
