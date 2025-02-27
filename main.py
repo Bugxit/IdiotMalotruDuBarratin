@@ -23,7 +23,13 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
     dessin.wn.setworldcoordinates(0, square_size, square_size, 0)
     #dessin.ht()
 
-    dessin.rect(25, 375, number_of_season * 125 - 25, 50)
+    bg_color_f = scale_function(0, square_size, 250, 100)
+    for y in range(square_size):
+        dessin.color(f"#DC{hex(int(bg_color_f(y)))[2:]}28")
+        dessin.ligne(0, y, square_size, y)
+    dessin.color("black")
+
+    dessin.rect_fill(25, 375, number_of_season * 125 - 25, 50, col="white")
 
     draw_x, draw_y = 25, 0
 
@@ -41,6 +47,8 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
 
     draw_x, draw_y = number_of_season * 125 + 200, 125
     color_f = scale_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
+
+    dessin.rect_fill(draw_x - 50, 175, 50, 50, "#000000")
     for s_num in range(number_of_season):
         dessin.rect_fill(draw_x, 175, 50, 50,"#000000")
         dessin.ecrire(draw_x + 10, 165, s_num+1, col="white")
