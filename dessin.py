@@ -25,15 +25,21 @@ def ligne(x1, y1, x2, y2):
 
 def rect(x, y, width, height):
     """
-        Trace un rectangle de coin haut gauche (x, y),
+        Trace un rectangle de coin bas gauche (x, y),
         de largeur width et de hauteur height.
     """
     bouge(x, y)
     goto(x + width, y)
-    goto(x + width, y + height)
-    goto(x, y + height)
+    goto(x + width, y - height)
+    goto(x, y - height)
     goto(x, y)
 
+def rect_fill(x, y, width, height, col):
+    bouge(x, y)
+    fillcolor(col)
+    begin_fill()
+    rect(x, y, width, height)
+    end_fill()
 
 def cercle(x, y, r):
     """
