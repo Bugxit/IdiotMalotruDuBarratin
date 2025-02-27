@@ -1,5 +1,8 @@
 import dessin
 
+def scale_function(x1, x2, y1, y2):
+    return lambda x : (y2 - y1) / (x2 - x1) * (x - x2) + y2
+
 def get_infos(rating_tab, name_tab):
     number_of_season = len(rating_tab)
     season_average = list(map(lambda l : round(sum(l) / len(l), 2), rating_tab))
@@ -14,13 +17,30 @@ def get_infos(rating_tab, name_tab):
 
     return number_of_season, season_average, max_episode_number, lowest_rated, highest_rated
 
-def draw(number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
+def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
     dessin.wn.setup(1000, 1000)
-    dessin.wn.setworldcoordinates(10, 1000, 1000, 11)
-    dessin.ht()
+    dessin.wn.setworldcoordinates(0, 1000, 1000, 0)
+    #dessin.ht()
 
-    dessin.bouge(50, 50)
-    dessin.ligne(0, 0, 0, 100)
+    dessin.rect(25, 275, number_of_season * 125 - 25, 50)
+
+    draw_x, draw_y = 25, 0
+
+    max_avg, min_avg = max(season_average), min(season_average)
+    height_f = scale_function(min_avg, max_avg, 100, 200)
+    color_f = scale_function(min_avg, max_avg, 200, 100)
+    for s_avg in season_average:
+        graph_height = height_f(s_avg)
+        graph_color  = hex(int(color_f(s_avg)))
+
+        dessin.rect_fill(draw_x, 225, 100, graph_height, f"#00{str(graph_color[2:])}00")
+        dessin.ecrire(draw_x + 10, 265 - graph_height, s_avg)
+
+        draw_x += 125
+
+
+
+
     dessin.save_image()
     print(number_of_season, season_average, max_episode_number, lowest_rated, highest_rated, sep="\n")
 
@@ -38,4 +58,4 @@ d = [["1.1","1.2","1.3","1.4","1.5","1.6","1.7"],
     ["5.1","5.2","5.3","5.4","5.5","5.6","5.7","5.8","5.9","5.10","5.11","5.12","5.13","5.14","5.15","5.16"]]
 
 number_of_season, season_average, max_episode_number, lowest_rated, highest_rated = get_infos(t, d)
-draw(number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
+draw(t, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
