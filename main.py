@@ -18,11 +18,12 @@ def get_infos(rating_tab, name_tab):
     return number_of_season, season_average, max_episode_number, lowest_rated, highest_rated
 
 def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
-    dessin.wn.setup(1000, 1000)
-    dessin.wn.setworldcoordinates(0, 1000, 1000, 0)
+    square_size = max(number_of_season * 175 + 250, 50 * max_episode_number + 225)
+    dessin.wn.setup(square_size, square_size)
+    dessin.wn.setworldcoordinates(0, square_size, square_size, 0)
     #dessin.ht()
 
-    dessin.rect(25, 275, number_of_season * 125 - 25, 50)
+    dessin.rect(25, 375, number_of_season * 125 - 25, 50)
 
     draw_x, draw_y = 25, 0
 
@@ -33,20 +34,20 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
         graph_height = height_f(s_avg)
         graph_color  = hex(int(color_f(s_avg)))
 
-        dessin.rect_fill(draw_x, 225, 100, graph_height, f"#00{str(graph_color[2:])}00")
-        dessin.ecrire(draw_x + 10, 265 - graph_height, s_avg)
+        dessin.rect_fill(draw_x, 325, 100, graph_height, f"#00{str(graph_color[2:])}00")
+        dessin.ecrire(draw_x + 10, 365 - graph_height, s_avg)
 
         draw_x += 125
 
-    draw_x, draw_y = number_of_season * 125 + 100, 125
+    draw_x, draw_y = number_of_season * 125 + 200, 125
     color_f = scale_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
     for s_num in range(number_of_season):
-        dessin.rect_fill(draw_x, 75, 50, 50,"#000000")
-        dessin.ecrire(draw_x + 10, 65, s_num+1, col="white")
-        draw_y = 125
+        dessin.rect_fill(draw_x, 175, 50, 50,"#000000")
+        dessin.ecrire(draw_x + 10, 165, s_num+1, col="white")
+        draw_y = 225
         for e_num, e_rating in enumerate(rating_tab[s_num]):
-            dessin.rect_fill(number_of_season * 125 + 50, draw_y, 50, 50,"#000000")
-            dessin.ecrire(number_of_season * 125 + 52, draw_y - 10, e_num+1, col="white")
+            dessin.rect_fill(number_of_season * 125 + 150, draw_y, 50, 50,"#000000")
+            dessin.ecrire(number_of_season * 125 + 152, draw_y - 10, e_num+1, col="white")
 
             graph_color = hex(int(color_f(e_rating)))
             dessin.rect_fill(draw_x, draw_y, 50, 50, f"#00{str(graph_color[2:])}00")
