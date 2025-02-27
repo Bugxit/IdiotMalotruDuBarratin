@@ -63,6 +63,15 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
             draw_y += 50
         draw_x += 50
 
+    draw_x = 570
+    for h_e in highest_rated:
+        graph_color = hex(int(color_f(h_e[1])))
+        dessin.rect_fill(25, draw_x, number_of_season * 125 - 25, 30, f"#00{str(graph_color[2:])}00")
+        draw_x += 30
+    for l_e in lowest_rated:
+        graph_color = hex(int(color_f(l_e[1])))
+        dessin.rect_fill(25, draw_x, number_of_season * 125 - 25, 30, f"#00{str(graph_color[2:])}00")
+        draw_x += 30
 
     dessin.save_image()
     print(number_of_season, season_average, max_episode_number, lowest_rated, highest_rated, sep="\n")
