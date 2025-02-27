@@ -21,7 +21,7 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
     square_size = max(number_of_season * 175 + 250, 50 * max_episode_number + 225)
     dessin.wn.setup(square_size, square_size)
     dessin.wn.setworldcoordinates(0, square_size, square_size, 0)
-    #dessin.ht()
+    dessin.ht()
 
     bg_color_f = scale_function(0, square_size, 250, 100)
     for y in range(square_size):
@@ -29,6 +29,7 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
         dessin.ligne(0, y, square_size, y)
     dessin.color("black")
 
+    dessin.ecrire(150, 100, "Season average", font=("Arial", 40, "bold"))
     dessin.rect_fill(25, 375, number_of_season * 125 - 25, 50, col="white")
 
     draw_x, draw_y = 25, 0
@@ -63,6 +64,8 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
             draw_y += 50
         draw_x += 50
 
+
+    dessin.ecrire(80, 500, "Best & Worst 5 episodes", font=("Arial", 40, "bold"))
 
     dessin.rect_fill(25, 570, number_of_season * 125 - 25, 30, f"#000000")
     dessin.ecrire(27, 567, "Pos", col="white", font=("Arial", 20, "normal"))
