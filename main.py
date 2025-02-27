@@ -63,15 +63,28 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
             draw_y += 50
         draw_x += 50
 
-    draw_x = 570
-    for h_e in highest_rated:
-        graph_color = hex(int(color_f(h_e[1])))
-        dessin.rect_fill(25, draw_x, number_of_season * 125 - 25, 30, f"#00{str(graph_color[2:])}00")
-        draw_x += 30
-    for l_e in lowest_rated:
-        graph_color = hex(int(color_f(l_e[1])))
-        dessin.rect_fill(25, draw_x, number_of_season * 125 - 25, 30, f"#00{str(graph_color[2:])}00")
-        draw_x += 30
+
+    dessin.rect_fill(25, 570, number_of_season * 125 - 25, 30, f"#000000")
+    dessin.ecrire(27, 567, "Pos", col="white", font=("Arial", 20, "normal"))
+    dessin.ecrire(90, 567, "N°S", col="white", font=("Arial", 20, "normal"))
+    dessin.ecrire(150, 567, "N°E", col="white", font=("Arial", 20, "normal"))
+    dessin.ecrire(210, 567, "/10", col="white", font=("Arial", 20, "normal"))
+    dessin.ecrire(280, 567, "Title", col="white", font=("Arial", 20, "normal"))
+
+    draw_y = 600
+
+    for letter, arr in [("H", highest_rated), ("L", lowest_rated)]:
+        for index, e in enumerate(arr):
+            graph_color = hex(int(color_f(e[1])))
+            dessin.rect_fill(25, draw_y, number_of_season * 125 - 25, 30, f"#00{str(graph_color[2:])}00")
+
+            dessin.ecrire(27, draw_y, f"{letter}#{index+1}", font=("Arial", 20, "normal"))
+            dessin.ecrire(90, draw_y, str(e[0][0]+1), font=("Arial", 20, "normal"))
+            dessin.ecrire(150, draw_y, str(e[0][1]+1), font=("Arial", 20, "normal"))
+            dessin.ecrire(210, draw_y, str(e[1]), font=("Arial", 20, "normal"))
+            dessin.ecrire(280, draw_y, e[2], font=("Arial", 20, "normal"))
+
+            draw_y += 30
 
     dessin.save_image()
     print(number_of_season, season_average, max_episode_number, lowest_rated, highest_rated, sep="\n")
