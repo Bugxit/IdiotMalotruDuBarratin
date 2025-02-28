@@ -3,32 +3,14 @@ import dessin
 def scale_function(x1, x2, y1, y2):
     return lambda x : (y2 - y1) / (x2 - x1) * (x - x2) + y2
 
-def get_infos(rating_tab, name_tab):
-    number_of_season = len(rating_tab)
-    season_average = list(map(lambda l : round(sum(l) / len(l), 2), rating_tab))
-    max_episode_number = len(max(rating_tab, key=len))
-
-    t = [((i,j), rating_tab[i][j], name_tab[i][j]) for i in range(len(rating_tab)) for j in range(len(rating_tab[i]))]
-    t.sort(key=lambda e : e[1])
-
-    lowest_rated = t[:5]
-    highest_rated = t[-5:]
-    highest_rated.reverse()
-
-    return number_of_season, season_average, max_episode_number, lowest_rated, highest_rated
-
-def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
-    square_size = max(number_of_season * 175 + 250, 50 * max_episode_number + 225)
-    dessin.wn.setup(square_size, square_size)
-    dessin.wn.setworldcoordinates(0, square_size, square_size, 0)
-    dessin.ht()
-
-    bg_color_f = scale_function(0, square_size, 250, 100)
-    for y in range(square_size):
+def draw_background(image_size):
+    bg_color_f = scale_function(0, image_size, 250, 100)
+    for y in range(image_size):
         dessin.color(f"#DC{hex(int(bg_color_f(y)))[2:]}28")
-        dessin.ligne(0, y, square_size, y)
+        dessin.ligne(0, y, image_size, y)
     dessin.color("black")
 
+def draw_season_average(number_of_season, season_average):
     dessin.ecrire(150, 100, "Season average", font=("Arial", 40, "bold"))
     dessin.rect_fill(25, 375, number_of_season * 125 - 25, 50, col="white")
 
@@ -46,6 +28,7 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
 
         draw_x += 125
 
+def draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_rated):
     draw_x, draw_y = number_of_season * 125 + 200, 125
     color_f = scale_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
 
@@ -63,8 +46,8 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
             dessin.ecrire(draw_x + 12, draw_y - 15, e_rating,font=('Arial', 20, 'bold'))
             draw_y += 50
         draw_x += 50
-
-
+    
+def draw_best_worst_5(number_of_season, lowest_rated, highest_rated):
     dessin.ecrire(80, 500, "Best & Worst 5 episodes", font=("Arial", 40, "bold"))
 
     dessin.rect_fill(25, 570, number_of_season * 125 - 25, 30, f"#000000")
@@ -75,7 +58,7 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
     dessin.ecrire(280, 567, "Title", col="white", font=("Arial", 20, "normal"))
 
     draw_y = 600
-
+    color_f = scale_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
     for letter, arr in [("H", highest_rated), ("L", lowest_rated)]:
         for index, e in enumerate(arr):
             graph_color = hex(int(color_f(e[1])))
@@ -89,12 +72,37 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
 
             draw_y += 30
 
+def get_infos(rating_tab, name_tab):
+    number_of_season = len(rating_tab)
+    season_average = list(map(lambda l : round(sum(l) / len(l), 2), rating_tab))
+    max_episode_number = len(max(rating_tab, key=len))
+
+    t = [((i,j), rating_tab[i][j], name_tab[i][j]) for i in range(len(rating_tab)) for j in range(len(rating_tab[i]))]
+    t.sort(key=lambda e : e[1])
+
+    lowest_rated = t[:5]
+    highest_rated = t[-5:]
+    highest_rated.reverse()
+
+    return number_of_season, season_average, max_episode_number, lowest_rated, highest_rated
+
+def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
+    image_size = max(number_of_season * 175 + 250, 50 * max_episode_number + 225, 1000)
+
+    dessin.wn.setup(image_size, image_size)
+    dessin.wn.setworldcoordinates(0, image_size, image_size, 0)
+    dessin.ht()
+
+    draw_background(image_size)
+    draw_season_average(number_of_season, season_average)
+    draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_rated)
+    draw_best_worst_5(number_of_season, lowest_rated, highest_rated)
+
     dessin.save_image()
 
 def generate_image_series(rating_tab, name_tab):
     number_of_season, season_average, max_episode_number, lowest_rated, highest_rated = get_infos(rating_tab, name_tab)
     draw(t, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
-
 
 
 t = [[9.1,8.7,8.8,8.3,8.4,9.3,8.9],
