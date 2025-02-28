@@ -18,7 +18,8 @@ def draw_background(image_size):
     dessin.color("black")
 
 def draw_season_average(number_of_season, season_average):
-    dessin.ecrire(150, 100, "Season average", font_size=40, font_type="bold")
+    x_text = number_of_season * 62.5
+    dessin.ecrire(x_text, 100, "Season average", align="center", font_size=40, font_type="bold")
     dessin.rect_fill(25, 375, number_of_season * 125 - 25, 50, col="white")
 
     draw_x = 25
@@ -56,7 +57,8 @@ def draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_
         draw_x += 50
     
 def draw_best_worst_5(number_of_season, lowest_rated, highest_rated):
-    dessin.ecrire(80, 500, "Best & Worst 5 episodes", font_size=40, font_type="bold")
+    x_text = number_of_season * 62.5
+    dessin.ecrire(x_text, 500, "Best & Worst 5 episodes", align="center", font_size=40, font_type="bold")
 
     dessin.rect_fill(25, 570, number_of_season * 125 - 25, 30, "black")
     dessin.ecrire(27, 567, "Pos", col="white", font_size=20)
@@ -112,15 +114,15 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
     dessin.save_image()
 
 def generate_image_series(rating_tab, name_tab):
+
     number_of_season, season_average, max_episode_number, lowest_rated, highest_rated = get_infos(rating_tab, name_tab)
-    draw(t, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
+    draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
 
 
 t = [[9.1,8.7,8.8,8.3,8.4,9.3,8.9],
     [8.7,9.3,8.4,8.3,8.4,8.9,8.7,9.2,9.2,8.6,8.9,9.3,9.3],
     [8.6,8.7,8.5,8.3,8.7,9.3,9.6,8.8,8.5,7.8,8.5,9.5,9.7],
-    [9.2,8.3,8.1,8.7,8.7,8.5,8.9,9.3,8.9,9.6,9.7,9.5,9.9],
-    [9.3,8.9,8.9,8.9,9.7,9.1,9.6,9.6,9.5,9.2,9.6,9.2,9.8,10,9.7,9.9]]
+]
 
 d = [["1.1","1.2","1.3","1.4","1.5","1.6","1.7"],
     ["2.1","2.2","2.3","2.4","2.5","2.6","2.7","2.8","2.9","2.10","2.11","2.12","2.13"],
