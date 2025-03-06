@@ -137,10 +137,3 @@ def format_ratings_name(query_result):
         name_tab[work_snum - 1].append(work_title)
 
     return name_tab, rating_tab
-
-"""
-if __name__ == "__main__":
-    import operations
-    n, r = format_ratings_name(operations.gabo)
-    generate_image_series(r, n)
-"""
