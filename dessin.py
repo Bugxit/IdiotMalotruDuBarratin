@@ -59,12 +59,12 @@ def ecrire(x, y, texte, col="black", align='left', font='Arial', font_size=32, f
     write(texte, align=align, font=(font, font_size, font_type))
     color("black")
 
-def save_image(output="output.png"):
+def save_image(output="output"):
     from PIL import Image
 
     wn.update()
     getscreen().getcanvas().postscript(file='funaaimelesfraises.ps')
     image = Image.open("funaaimelesfraises.ps")
-    image.convert("RGB").save("output.jpg", "JPEG")
-    image.save("output.png", "PNG")
+    image.convert("RGB").save(output + ".jpg", "JPEG")
+    image.save(output + ".png", "PNG")
     remove("funaaimelesfraises.ps")
