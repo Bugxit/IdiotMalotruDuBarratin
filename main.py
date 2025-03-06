@@ -2,4 +2,4 @@ import logic
 import operations
 
 if __name__ == "__main__":
-    "cactus"
+    path = "/var/www/html/images/"
