@@ -33,7 +33,7 @@ def draw_season_average(number_of_season, season_average):
         graph_color  = g_to_hex_color(s_avg, color_f)
 
         dessin.rect_fill(draw_x, 325, 100, graph_height, graph_color)
-        dessin.ecrire(draw_x + 10, 365 - graph_height, s_avg)
+        dessin.ecrire(draw_x + 50, 365 - graph_height, s_avg, align="center")
 
         draw_x += 125
 
@@ -118,16 +118,29 @@ def generate_image_series(rating_tab, name_tab):
     number_of_season, season_average, max_episode_number, lowest_rated, highest_rated = get_infos(rating_tab, name_tab)
     draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
 
+def format_ratings_name(query_result):
+    rating_tab = [[]]
+    name_tab = [[]]
 
-t = [[9.1,8.7,8.8,8.3,8.4,9.3,8.9],
-    [8.7,9.3,8.4,8.3,8.4,8.9,8.7,9.2,9.2,8.6,8.9,9.3,9.3],
-    [8.6,8.7,8.5,8.3,8.7,9.3,9.6,8.8,8.5,7.8,8.5,9.5,9.7],
-]
+    prob_season = 1
+    for work_snum, work_rating, work_title in query_result:
+        work_snum, work_rating = int(work_snum), float(work_rating)
+        if work_snum == prob_season + 1:
+            prob_season += 1
+            rating_tab.append([])
+            name_tab.append([])
 
-d = [["1.1","1.2","1.3","1.4","1.5","1.6","1.7"],
-    ["2.1","2.2","2.3","2.4","2.5","2.6","2.7","2.8","2.9","2.10","2.11","2.12","2.13"],
-    ["3.1","3.2","3.3","3.4","3.5","3.6","3.7","3.8","3.9","3.10","3.11","3.12","3.13"],
-    ["4.1","4.2","4.3","4.4","4.5","4.6","4.7","4.8","4.9","4.10","4.11","4.12","4.13"],
-    ["5.1","5.2","5.3","5.4","5.5","5.6","5.7","5.8","5.9","5.10","5.11","5.12","5.13","5.14","5.15","5.16"]]
+        if work_snum != prob_season:
+            break
 
-generate_image_series(t, d)
+        rating_tab[work_snum - 1].append(work_rating)
+        name_tab[work_snum - 1].append(work_title)
+
+    return name_tab, rating_tab
+
+"""
+if __name__ == "__main__":
+    import operations
+    n, r = format_ratings_name(operations.gabo)
+    generate_image_series(r, n)
+"""
