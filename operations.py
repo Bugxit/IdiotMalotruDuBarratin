@@ -31,9 +31,7 @@ class DBBIGBOSS:
         lignes = cursor.fetchall()
         for ligne in lignes:
             reponse.append(ligne)
-        print(reponse)
         self.conn.commit()
         return reponse
 
 db = DBBIGBOSS()
-db.episodeList("0903747")
