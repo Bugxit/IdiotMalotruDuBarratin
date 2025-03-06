@@ -3,6 +3,7 @@ from os import remove
 
 wn = Screen()
 wn.tracer(0)
+wn.cv._rootwindow.withdraw()
 
 def bouge(x, y):
     """

@@ -6,14 +6,16 @@ class DBBIGBOSS:
     def lookup(self, name):
         cursor = self.conn.cursor()
         query = "\
-        SELECT id_work\
+        SELECT work_basics.id_work, primaryTitle\
         FROM work_basics\
-        WHERE worktype LIKE 'tvSeries' AND work_basics.primaryTitle LIKE %s;\
+        JOIN work_ratings ON work_ratings.id_work = work_basics.id_work\
+        WHERE worktype LIKE 'tvSeries' AND primaryTitle LIKE %s\
+        ORDER BY work_ratings.numVotes DESC\
+        LIMIT 20;\
         "
-        cursor.execute(query, (name,))
+        cursor.execute(query, (f"%{name}%",))
         lignes = cursor.fetchall()
-        for ligne in lignes:
-            print(ligne[0])
+        return lignes
         
     def episodeList(self, idd):
         print(idd)
