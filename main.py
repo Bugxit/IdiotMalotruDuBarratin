@@ -99,7 +99,7 @@ def get_infos(rating_tab, name_tab):
 
     return number_of_season, season_average, max_episode_number, lowest_rated, highest_rated
 
-def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated):
+def draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated, output_path="output"):
     image_size = max(number_of_season * 175 + 250, 50 * max_episode_number + 225, 1000)
 
     dessin.wn.setup(image_size, image_size)
@@ -111,12 +111,12 @@ def draw(rating_tab, number_of_season, season_average, max_episode_number, lowes
     draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_rated)
     draw_best_worst_5(number_of_season, lowest_rated, highest_rated)
 
-    dessin.save_image()
+    dessin.save_image(output_path)
 
-def generate_image_series(rating_tab, name_tab):
+def generate_image_series(rating_tab, name_tab, output_path="output"):
 
     number_of_season, season_average, max_episode_number, lowest_rated, highest_rated = get_infos(rating_tab, name_tab)
-    draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated)
+    draw(rating_tab, number_of_season, season_average, max_episode_number, lowest_rated, highest_rated, output_path)
 
 def format_ratings_name(query_result):
     rating_tab = [[]]
