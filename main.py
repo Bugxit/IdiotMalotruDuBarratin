@@ -2,7 +2,6 @@ import logic
 import operations
 
 import sys
-print (sys.argv)
 
 if __name__ == "__main__":
     argc = len(sys.argv)
