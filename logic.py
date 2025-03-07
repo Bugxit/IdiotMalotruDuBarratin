@@ -1,17 +1,31 @@
 import dessin
 
+WORST_GRADE = (0, 0, 0)
+BEST_GRADE = (10, 10, 10)
+WORST_GRADE_RGB = (252, 157, 16)
+BEST_GRADE_RGB = (44, 115, 16)
+
 def affine_function(x1, x2, y1, y2):
     return lambda x : (y2 - y1) / (x2 - x1) * (x - x2) + y2
 
-def g_to_hex_color(g, f):
-    e = int(f(g))
-    str_hex = str(hex(e))[2:4]
-    return f"#00{str_hex}00"
+def color_function(startABS, endABS, startIMG, endIMG):
+    slope_0 = ( endIMG[0] - startIMG[0] ) / ( endABS[0] - startABS[0] )
+    slope_1 = ( endIMG[1] - startIMG[1] ) / ( endABS[1] - startABS[1] )
+    slope_2 = ( endIMG[2] - startIMG[2] ) / ( endABS[2] - startABS[2] )
+    return lambda x1 : (slope_0 * (x1 - startABS[0]) + startIMG[0], slope_1 * (x1 - startABS[1]) + startIMG[1], slope_2 * (x1 - startABS[2]) + startIMG[2])
+
+def rgb_dec_hex(r=0, g=0, b=0):
+    r_hex = str(hex(int(r)))[2:4]
+    g_hex = str(hex(int(g)))[2:4]
+    b_hex = str(hex(int(b)))[2:4]
+
+    return f"#{r_hex}{g_hex}{b_hex}"
 
 def draw_background(image_size):
-    bg_color_f = affine_function(0, image_size, 250, 100)
+    bg_color_f = color_function((0, 0, 0), (image_size, image_size, image_size), (200, 250, 40), (200, 100, 40))
     for y in range(image_size):
-        row_color = f"#DC{hex(int(bg_color_f(y)))[2:]}28"
+        r, g, b = bg_color_f(y)
+        row_color = rgb_dec_hex(r, g, b)
         dessin.color(row_color)
         dessin.ligne(0, y, image_size, y)
 
@@ -26,11 +40,12 @@ def draw_season_average(number_of_season, season_average):
 
     max_avg, min_avg = max(season_average), min(season_average)
     height_f = affine_function(min_avg, max_avg, 100, 200)
-    color_f = affine_function(min_avg, max_avg, 200, 100)
+    color_f = color_function(WORST_GRADE, BEST_GRADE, WORST_GRADE_RGB, BEST_GRADE_RGB)
 
     for s_avg in season_average:
         graph_height = height_f(s_avg)
-        graph_color  = g_to_hex_color(s_avg, color_f)
+        r, g, b = color_f(s_avg)
+        graph_color = rgb_dec_hex(r, g, b)
 
         dessin.rect_fill(draw_x, 325, 100, graph_height, graph_color)
         dessin.ecrire(draw_x + 50, 365 - graph_height, s_avg, align="center")
@@ -39,7 +54,7 @@ def draw_season_average(number_of_season, season_average):
 
 def draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_rated):
     draw_x, draw_y = number_of_season * 125 + 200, 125
-    color_f = affine_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
+    color_f = color_function(WORST_GRADE, BEST_GRADE, WORST_GRADE_RGB, BEST_GRADE_RGB)
 
     dessin.rect_fill(draw_x - 50, 175, 50, 50, "black")
     for s_num in range(number_of_season):
@@ -50,7 +65,9 @@ def draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_
             dessin.rect_fill(number_of_season * 125 + 150, draw_y, 50, 50,"black")
             dessin.ecrire(number_of_season * 125 + 152, draw_y - 10, e_num+1, col="white")
 
-            graph_color = g_to_hex_color(e_rating, color_f)
+            r, g, b = color_f(e_rating)
+            graph_color = rgb_dec_hex(r, g, b)
+
             dessin.rect_fill(draw_x, draw_y, 50, 50, graph_color)
             dessin.ecrire(draw_x + 12, draw_y - 15, e_rating, font_size=20, font_type="bold")
             draw_y += 50
@@ -68,13 +85,14 @@ def draw_best_worst_5(number_of_season, lowest_rated, highest_rated):
     dessin.ecrire(280, 567, "Title", col="white", font_size=20)
 
     draw_y = 600
-    color_f = affine_function(lowest_rated[0][1], highest_rated[0][1], 200, 100)
+    color_f = color_function(WORST_GRADE, BEST_GRADE, WORST_GRADE_RGB, BEST_GRADE_RGB)
 
     for letter, arr in [("H", highest_rated), ("L", lowest_rated)]:
 
         for index, e in enumerate(arr):
 
-            graph_color = g_to_hex_color(e[1], color_f)
+            r, g, b = color_f(e[1])
+            graph_color = rgb_dec_hex(r, g, b)
             dessin.rect_fill(25, draw_y, number_of_season * 125 - 25, 30, graph_color)
 
             dessin.ecrire(27, draw_y, f"{letter}#{index+1}", font_size=20)
