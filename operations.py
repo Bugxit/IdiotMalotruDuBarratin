@@ -1,21 +1,37 @@
 import mysql.connector
+import signal
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    raise TimeoutException("Database lookup took too long")
 
 class DBBIGBOSS:
     def __init__(self):
         self.conn = mysql.connector.connect(host="localhost",user="elevelocal", database="imdb")
+        
     def lookup(self, name):
-        cursor = self.conn.cursor()
-        query = "\
-        SELECT work_basics.id_work, primaryTitle\
-        FROM work_basics\
-        JOIN work_ratings ON work_ratings.id_work = work_basics.id_work\
-        WHERE worktype LIKE 'tvSeries' AND primaryTitle LIKE %s\
-        ORDER BY work_ratings.numVotes DESC\
-        LIMIT 20;\
-        "
-        cursor.execute(query, (f"%{name}%",))
-        lignes = cursor.fetchall()
-        return lignes
+        signal.signal(signal.SIGALRM, timeout_handler)  # Set signal handler
+        signal.alarm(20)  # Set timeout to 20 seconds
+
+        try:
+            cursor = self.conn.cursor()
+            query = """
+            SELECT work_basics.id_work, primaryTitle
+            FROM work_basics
+            JOIN work_ratings ON work_ratings.id_work = work_basics.id_work
+            WHERE worktype LIKE 'tvSeries' AND primaryTitle LIKE %s
+            ORDER BY work_ratings.numVotes DESC
+            LIMIT 10;
+            """
+            cursor.execute(query, (f"%{name}%",))
+            lignes = cursor.fetchall()
+            return lignes
+        except TimeoutException as e:
+            raise RuntimeError("Lookup timed out") from e
+        finally:
+            signal.alarm(0)
         
     def episodeList(self, idd):
         print(idd)
