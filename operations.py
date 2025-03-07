@@ -13,7 +13,7 @@ class DBBIGBOSS:
         
     def lookup(self, name):
         signal.signal(signal.SIGALRM, timeout_handler)  # Set signal handler
-        signal.alarm(20)  # Set timeout to 20 seconds
+        signal.alarm(10)  # Set timeout to 20 seconds
 
         try:
             cursor = self.conn.cursor()
@@ -34,7 +34,6 @@ class DBBIGBOSS:
             signal.alarm(0)
         
     def episodeList(self, idd):
-        print(idd)
         reponse = []
         cursor = self.conn.cursor()
         query = "\

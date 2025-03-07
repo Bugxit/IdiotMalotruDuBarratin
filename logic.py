@@ -1,9 +1,17 @@
 import dessin
+import colorsys
 
+def hsltorgb(h, s, l):
+    r, g, b = colorsys.hls_to_rgb(h/360, l/100, s/100)
+    return (int(r*255), int(g*255), int(b*255))
+
+def notetorgb(note):
+    return hsltorgb(note*10, 100, 40)
+    
 WORST_GRADE = (0, 0, 0)
 BEST_GRADE = (10, 10, 10)
-WORST_GRADE_RGB = (252, 157, 16)
-BEST_GRADE_RGB = (44, 115, 16)
+WORST_GRADE_RGB = (217, 249, 157)
+BEST_GRADE_RGB = (26, 46, 16)
 
 def affine_function(x1, x2, y1, y2):
     return lambda x : (y2 - y1) / (x2 - x1) * (x - x2) + y2
@@ -15,9 +23,9 @@ def color_function(startABS, endABS, startIMG, endIMG):
     return lambda x1 : (slope_0 * (x1 - startABS[0]) + startIMG[0], slope_1 * (x1 - startABS[1]) + startIMG[1], slope_2 * (x1 - startABS[2]) + startIMG[2])
 
 def rgb_dec_hex(r=0, g=0, b=0):
-    r_hex = str(hex(int(r)))[2:4]
-    g_hex = str(hex(int(g)))[2:4]
-    b_hex = str(hex(int(b)))[2:4]
+    r_hex = str(hex(int(r)))[2:4] + ("0" if r < 16 else "")
+    g_hex = str(hex(int(g)))[2:4] + ("0" if g < 16 else "")
+    b_hex = str(hex(int(b)))[2:4] + ("0" if b < 16 else "")
 
     return f"#{r_hex}{g_hex}{b_hex}"
 
@@ -39,12 +47,14 @@ def draw_season_average(number_of_season, season_average):
     draw_x = 25
 
     max_avg, min_avg = max(season_average), min(season_average)
+    if max_avg == min_avg:
+        max_avg += .1
     height_f = affine_function(min_avg, max_avg, 100, 200)
     color_f = color_function(WORST_GRADE, BEST_GRADE, WORST_GRADE_RGB, BEST_GRADE_RGB)
 
     for s_avg in season_average:
         graph_height = height_f(s_avg)
-        r, g, b = color_f(s_avg)
+        r, g, b = notetorgb(s_avg)
         graph_color = rgb_dec_hex(r, g, b)
 
         dessin.rect_fill(draw_x, 325, 100, graph_height, graph_color)
@@ -65,7 +75,7 @@ def draw_rating_per_episode(rating_tab, number_of_season, lowest_rated, highest_
             dessin.rect_fill(number_of_season * 125 + 150, draw_y, 50, 50,"black")
             dessin.ecrire(number_of_season * 125 + 152, draw_y - 10, e_num+1, col="white")
 
-            r, g, b = color_f(e_rating)
+            r, g, b = notetorgb(e_rating)
             graph_color = rgb_dec_hex(r, g, b)
 
             dessin.rect_fill(draw_x, draw_y, 50, 50, graph_color)
@@ -91,7 +101,7 @@ def draw_best_worst_5(number_of_season, lowest_rated, highest_rated):
 
         for index, e in enumerate(arr):
 
-            r, g, b = color_f(e[1])
+            r, g, b = notetorgb(e[1])
             graph_color = rgb_dec_hex(r, g, b)
             dessin.rect_fill(25, draw_y, number_of_season * 125 - 25, 30, graph_color)
 

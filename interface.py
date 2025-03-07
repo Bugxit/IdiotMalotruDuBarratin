@@ -61,7 +61,10 @@ class Menu:
         console.print('🔍 Film que vous cherchez', justify="center")
         print()
         a = input("     > ")
-        self.search(a)
+        if a[:3] == "id=":
+            self.image(a[3:])
+        else:
+            self.search(a)
 
     def search(self, name):
         try:
