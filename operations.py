@@ -1,21 +1,44 @@
+"""
+FICHIER DE GESTION DE LA BDD IMDB
+
+Classe principale : BDDBIGBOSS
+"""
+
 import mysql.connector
 import signal
 
 class TimeoutException(Exception):
+    """
+    Classe vide qui crée une Exception "personalisé" pour gérer le timeout
+    """
     pass
 
 def timeout_handler(signum, frame):
+    """
+    Fonction qui appelle la classe d'Exception custom si trop long
+    """
     raise TimeoutException("Database lookup took too long")
 
 class DBBIGBOSS:
+    """
+    Classe principale qui gère la connexion et les requetes à la BDD
+    """
     def __init__(self):
+        # 
         self.conn = mysql.connector.connect(host="localhost",user="elevelocal", database="imdb")
         
     def lookup(self, name):
-        signal.signal(signal.SIGALRM, timeout_handler)  # Set signal handler
-        signal.alarm(10)  # Set timeout to 20 seconds
+        """
+        Fonction qui permet de trouver des couples id - titres selon un titre
+        Trié par similarité et nombres de votes
+        """
+        # Génère un signal, appel qui lance le timeout
+        signal.signal(signal.SIGALRM, timeout_handler)
+        # Met le temps de timeout à 10 secondes
+        signal.alarm(10)
 
         try:
+            # Boucle TRY pour tester le timeout
             cursor = self.conn.cursor()
             query = """
             SELECT work_basics.id_work, primaryTitle
@@ -29,11 +52,16 @@ class DBBIGBOSS:
             lignes = cursor.fetchall()
             return lignes
         except TimeoutException as e:
+            # Timeout
             raise RuntimeError("Lookup timed out") from e
         finally:
+            # Réinistialise le TO
             signal.alarm(0)
         
     def episodeList(self, idd):
+        """
+        Fonction qui permet de récupérer toutes les données de votes à partir d'un identifitant IMDB
+        """
         reponse = []
         cursor = self.conn.cursor()
         query = "\
