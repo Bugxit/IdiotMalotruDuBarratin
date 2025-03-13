@@ -14,6 +14,9 @@ def bouge(x, y):
     down()
 
 def offset(xoff, yoff):
+    """
+        Déplace la tortue de xoff et yoff à partir de la position actuelle
+    """
     cur_x, cur_y = pos()
     bouge(cur_x + xoff, cur_y + yoff)
 
