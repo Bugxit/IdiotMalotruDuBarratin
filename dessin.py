@@ -61,11 +61,16 @@ def ecrire(x, y, texte, col="black", align='left', font='Arial', font_size=32, f
     color("black")
 
 def save_image(output="output"):
+    # Imported here because ratio (to prove we did not cheat)
     from PIL import Image
 
+    # Update the screen
     wn.update()
+    # Get EPS file
     getscreen().getcanvas().postscript(file='funaaimelesfraises.ps')
     image = Image.open("funaaimelesfraises.ps")
+    # Convert & save it to JPG and PNG
     image.convert("RGB").save(output + ".jpg", "JPEG")
     image.save(output + ".png", "PNG")
+    # Clear the useless EPS file
     remove("funaaimelesfraises.ps")
